@@ -124,9 +124,17 @@ WHERE
   return (
     <div className="w-full">
       <div className="w-full justify-between flex p-2 px-12 items-center">
-        <a href="/file/data.csv" download className="text-blue-400 underline">
-          Download File Example
-        </a>
+        <div className="flex gap-x-2">
+          <a href="/file/data.csv" download className="text-blue-400 underline">
+            Download File Example
+          </a>
+          <a
+            href="https://github.com/natalystx/code-editor-with-custom-compiler-poc/blob/main/README.md"
+            target="_blank"
+          >
+            Doc
+          </a>
+        </div>
         <button onClick={query} className="p-2 bg-slate-500">
           Run
         </button>
