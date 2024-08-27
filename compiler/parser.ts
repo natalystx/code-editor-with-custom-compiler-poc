@@ -35,9 +35,7 @@ const generateSelectStatement = (node: ASTNode): string => {
 
   code += `const result = [];\n`;
 
-  code += `fs.createReadStream(${
-    process.env.environment === "production" ? process.cwd() : ""
-  }${fileName})\n  .pipe(csv())\n  .on('data', (row) => {\n`;
+  code += `fs.createReadStream(${fileName})\n  .pipe(csv())\n  .on('data', (row) => {\n`;
 
   if (node.condition) {
     if (node.condition.type === ASTNodeTypes.WHERE_CLAUSE) {

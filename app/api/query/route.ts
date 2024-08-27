@@ -4,6 +4,8 @@ import { tokenize } from "../../../compiler/lexer";
 import { generateCode } from "../../../compiler/parser";
 import ts from "typescript";
 import vm from "vm";
+import fs from "node:fs";
+import csv from "csv-parser";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -11,14 +13,14 @@ export async function POST(request: Request) {
   const tokens = tokenize(body.code);
   const code = generateCode(parse(tokens));
   const jsCode = ts.transpile(code);
+
   const context = {
-    fs: require("node:fs"),
-    csv: require("csv-parser"),
+    fs,
+    csv,
     console: console,
-    require: require,
     result: null,
-    process: process,
   };
+
   vm.createContext(context);
   const script = new vm.Script(`
       new Promise((resolve, reject) => {
