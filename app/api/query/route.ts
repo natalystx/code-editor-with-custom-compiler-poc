@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     console: console,
     require: require,
     result: null,
+    process: process,
   };
   vm.createContext(context);
   const script = new vm.Script(`
