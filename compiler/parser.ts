@@ -1,4 +1,3 @@
-import path from "path";
 import { ASTNode, ASTNodeTypes } from "./ast";
 import { getFile } from "@/getFile";
 let fileDes: string;
