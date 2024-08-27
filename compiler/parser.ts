@@ -1,6 +1,7 @@
 import path from "path";
 import { ASTNode, ASTNodeTypes } from "./ast";
-
+import { getFile } from "@/getFile";
+let fileDes: string;
 export const generateCode = (ast: ASTNode[]): string => {
   let code = "";
 
@@ -25,17 +26,18 @@ export const generateCode = (ast: ASTNode[]): string => {
 const generateImportStatement = (node: ASTNode): string => {
   const variableName = node.left?.value;
   const filePath = node.right?.value;
-
+  fileDes = filePath as string;
   return `const ${variableName} = '${filePath}';\n`;
 };
 
 const generateSelectStatement = (node: ASTNode): string => {
-  const fileName = node.consequent?.value;
   let code = "";
 
   code += `const result = [];\n`;
 
-  code += `fs.createReadStream(${fileName})\n  .pipe(csv())\n  .on('data', (row) => {\n`;
+  const filePath = getFile(`${fileDes}`);
+
+  code += `fs.createReadStream('${filePath}')\n  .pipe(csv())\n  .on('data', (row) => {\n`;
 
   if (node.condition) {
     if (node.condition.type === ASTNodeTypes.WHERE_CLAUSE) {
