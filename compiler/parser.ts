@@ -1,6 +1,6 @@
+import { base64CSV } from "@/file/base64";
 import { ASTNode, ASTNodeTypes } from "./ast";
-import { getFile } from "@/getFile";
-let fileDes: string;
+
 export const generateCode = (ast: ASTNode[]): string => {
   let code = "";
 
@@ -25,7 +25,6 @@ export const generateCode = (ast: ASTNode[]): string => {
 const generateImportStatement = (node: ASTNode): string => {
   const variableName = node.left?.value;
   const filePath = node.right?.value;
-  fileDes = filePath as string;
   return `const ${variableName} = '${filePath}';\n`;
 };
 
@@ -34,9 +33,13 @@ const generateSelectStatement = (node: ASTNode): string => {
 
   code += `const result = [];\n`;
 
-  const filePath = getFile(`${fileDes}`);
+  code += `
+const decodedCSVBuffer = Buffer.from('${base64CSV}', 'base64');
+const readableStream = new Readable();
+readableStream.push(decodedCSVBuffer);
+readableStream.push(null);`;
 
-  code += `fs.createReadStream('${filePath}')\n  .pipe(csv())\n  .on('data', (row) => {\n`;
+  code += `readableStream\n  .pipe(csv())\n  .on('data', (row) => {\n`;
 
   if (node.condition) {
     if (node.condition.type === ASTNodeTypes.WHERE_CLAUSE) {

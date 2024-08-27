@@ -6,6 +6,8 @@ import ts from "typescript";
 import vm from "vm";
 import fs from "node:fs";
 import csv from "csv-parser";
+import { Buffer } from "buffer";
+import { Readable } from "stream";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -19,6 +21,8 @@ export async function POST(request: Request) {
     csv,
     console: console,
     result: null,
+    Buffer,
+    Readable,
   };
 
   vm.createContext(context);
