@@ -1,3 +1,4 @@
+export const dynamic = "true";
 import { parse } from "../../../compiler/ast";
 import { tokenize } from "../../../compiler/lexer";
 import { generateCode } from "../../../compiler/parser";
