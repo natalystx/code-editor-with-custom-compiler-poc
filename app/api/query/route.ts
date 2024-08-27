@@ -1,4 +1,4 @@
-export const dynamic = "true";
+export const dynamic = "force-dynamic";
 import { parse } from "../../../compiler/ast";
 import { tokenize } from "../../../compiler/lexer";
 import { generateCode } from "../../../compiler/parser";
