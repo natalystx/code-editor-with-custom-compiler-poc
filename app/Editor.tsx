@@ -12,6 +12,7 @@ WHERE
   const monaco = useMonaco();
 
   const [init, setInit] = React.useState(false);
+  const [running, setRunning] = React.useState(false);
 
   useEffect(() => {
     if (!monaco) return;
@@ -108,17 +109,24 @@ WHERE
   }, [monaco]);
 
   const query = async () => {
-    const response = await fetch("/api/query", {
-      method: "POST",
-      body: JSON.stringify({ code }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setRunning(true);
+    try {
+      const response = await fetch("/api/query", {
+        method: "POST",
+        body: JSON.stringify({ code }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    setResult(data);
+      setResult(data);
+      setRunning(false);
+    } catch (error: any) {
+      setResult(error.message);
+      setRunning(false);
+    }
   };
 
   return (
@@ -135,8 +143,8 @@ WHERE
             Doc
           </a>
         </div>
-        <button onClick={query} className="p-2 bg-slate-500">
-          Run
+        <button onClick={query} className="p-2 bg-slate-500" disabled={running}>
+          {running ? "Running" : "Run"}
         </button>
       </div>
       {init ? (
@@ -152,7 +160,11 @@ WHERE
 
       <div>
         <h2>Result</h2>
-        <pre>{JSON.stringify(result, null, 2)}</pre>
+        {running ? (
+          <p>running.... Please wait for a while</p>
+        ) : (
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+        )}
       </div>
     </div>
   );
